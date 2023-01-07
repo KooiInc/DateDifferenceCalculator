@@ -39,28 +39,28 @@ function dateDiffCalculatorFactory() {
       toString: () => diffsStringifier({diffs}),
       fullString: () => diffsStringifier({diffs, all: true}) };
   };
+}
 
-  function compositions() {
-    const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
-    const singleOrMultiple = (numberOf, term) => (numberOf === 1 ? term.slice(0, -1) : term);
-    const date2Fragments = date => ( {
-      year: date.getFullYear(), month: date.getMonth(), date: date.getDate(),
-      hours: date.getHours(), minutes: date.getMinutes(), seconds: date.getSeconds(), } );
-    const aggregateDiffs = ({diffs, all}) => all
-      ? Object.entries(diffs)
-      : Object.entries(diffs).filter(([, value]) => all ? value : value > 0);
-    const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
-      [...acc, `${value} ${singleOrMultiple(value, key)}`], [] );
-    const diffs2SingleString = diffStrings  => diffStrings.length < 1
-      ? `Dates are equal` : `${diffStrings.slice(0, -1).join(`, `)}${
-          diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
-    const firstDayOfNextMonth = ({year, month}) => new Date(year, month + 1, 1)
-    const daysInMonth = date => new Date(date.setDate(date.getDate() - 1)).getDate();
-    const sortDates = ([d1, d2]) => [d1, d2].sort( (a, b) => +a - +b);
-    const dates2Fragments = ([from, to]) => [date2Fragments(from), date2Fragments(to)];
-    return [
-      pipe(aggregateDiffs, stringifyDiffs, diffs2SingleString),
-      pipe(firstDayOfNextMonth, daysInMonth),
-      pipe(sortDates, dates2Fragments), ];
-  }
+function compositions() {
+  const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
+  const singleOrMultiple = (numberOf, term) => (numberOf === 1 ? term.slice(0, -1) : term);
+  const date2Fragments = date => ( {
+    year: date.getFullYear(), month: date.getMonth(), date: date.getDate(),
+    hours: date.getHours(), minutes: date.getMinutes(), seconds: date.getSeconds(), } );
+  const aggregateDiffs = ({diffs, all}) => all
+    ? Object.entries(diffs)
+    : Object.entries(diffs).filter(([, value]) => all ? value : value > 0);
+  const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
+    [...acc, `${value} ${singleOrMultiple(value, key)}`], [] );
+  const diffs2SingleString = diffStrings  => diffStrings.length < 1
+    ? `Dates are equal` : `${diffStrings.slice(0, -1).join(`, `)}${
+      diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
+  const firstDayOfNextMonth = ({year, month}) => new Date(year, month + 1, 1)
+  const daysInMonth = date => new Date(date.setDate(date.getDate() - 1)).getDate();
+  const sortDates = ([d1, d2]) => [d1, d2].sort( (a, b) => +a - +b);
+  const dates2Fragments = ([from, to]) => [date2Fragments(from), date2Fragments(to)];
+  return [
+    pipe(aggregateDiffs, stringifyDiffs, diffs2SingleString),
+    pipe(firstDayOfNextMonth, daysInMonth),
+    pipe(sortDates, dates2Fragments), ];
 }
