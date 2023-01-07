@@ -3,7 +3,7 @@ Calculate the time passed in years, months, days, hours etc. for a date compared
 
 The exported `dateDiffCalculatorFactory` (from `index.js`) returns a function to calculate the time between two dates.
 
-The function returns the time passed in years, months, days, hours etc. for a date compared to a later or earlier date.
+The function returns the time passed in years, months, days, hours etc. for a date compared to another date.
 For example, the time from now until next new year:
 
 ```js
