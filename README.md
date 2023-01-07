@@ -36,4 +36,4 @@ const diff = diffCalc(now, then);
 console.log(`${diff.fullString()}`) //=> "1 year, 0 months, 0 days, 0 hours, 0 minutes and 0 seconds";
 ```
 
-Tests and example can be found @ this [Stackblitz project](https://stackblitz.com/edit/web-platform-hrkuqv?file=script.js)
+Tests and example can be found [here]("./ExamplesAndTest/").
