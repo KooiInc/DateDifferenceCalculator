@@ -1,7 +1,7 @@
 const { print } = printFactory();
 const xDFactory = (await import(`https://kooiinc.github.io/datefiddler/datefiddler.js`)).default;
-//import dateDiffCalculatorFactory from "../index.js";
-import dateDiffCalculatorFactory from "/ddcLib/index.js";
+const libLocation = location.host.startsWith(`dev.kooi`) ? "/ddcLib/index.js" : "../index.js";
+const dateDiffCalculatorFactory = (await import(libLocation)).default;
 const diffCalc = dateDiffCalculatorFactory();
 printHeader();
 runTests();
