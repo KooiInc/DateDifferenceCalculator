@@ -1,7 +1,7 @@
 # DateDifferenceCalculator
 Calculate the time passed in years, months, days, hours etc. for a date compared to a later or earlier date.
 
-`dateDiffCalculatorFactory` returns a function to calculate the time between two dates.
+The exported `dateDiffCalculatorFactory` (from `index.js`) returns a function to calculate the time between two dates.
 
 The function returns the time passed in years, months, days, hours etc. for a date compared to a later or earlier date.
 For example, the time from now until next new year:
@@ -12,5 +12,26 @@ const diffCalc = dateDiffCalculatorFactory();
 const now = new Date();
 const newYear = new Date(now.getFullYear(), 11, 31);
 const TimeToNewYear = diffCalc(now, newYear);
-// Note: parameter order is not relevant ;)
-```    
+```
+
+**Note**: the `diffCalc` parameter order is not relevant.
+
+The return value is an `Object` with the calculated difference values (`{years, months, days, hours, minutes, seconds}`).
+
+To display the difference as a string, the default `toString` of the returned object displays all values > 0
+
+```js
+const now = new Date();
+const then = new Date(new Date(now).setFullYear(now.getFullYear() + 1));
+const diff = diffCalc(now, then);
+console.log(`${diff}`) //=> "1 year";
+```
+
+To include zero values from the difference in a string, use `[returned value].fullString()`
+
+```js
+const now = new Date();
+const then = new Date(new Date(now).setFullYear(now.getFullYear() + 1));
+const diff = diffCalc(now, then);
+console.log(`${diff.fullString()}`) //=> "1 year, 0 months, 0 days, 0 hours, 0 minutes and 0 seconds";
+```
