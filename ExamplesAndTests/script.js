@@ -140,7 +140,7 @@ function printFactory() {
 
 function printHeader() {
   const example = `<pre class="language-javascript line-numbers"><code class="js">// import & initialize
-const ddFactory = (await import(\`https://kooiinc.github.io/DateDifferenceCalculator/index.js\`)).default;
+const ddFactory = (await import(\`//kooiinc.github.io/DateDifferenceCalculator/index.js\`)).default;
 const diffCalc = ddFactory();
 
 function displayTime2NewYear() {
@@ -149,7 +149,7 @@ function displayTime2NewYear() {
   const nwYearElem = document.querySelector(\`#showNwYear\`);
   const run = () =>  {
       clearTimeout(to);
-      nwYearElem.innerHTML = \`<b>\${diffCalc(new Date(), newYear).fullString()}</b>\`;
+      nwYearElem.innerHTML = \`&lt;b>\${diffCalc(new Date(), newYear).fullString()}&lt;/b>\`;
       to = setTimeout(run, 1000);
   };
   run();
