@@ -1,0 +1,95 @@
+body {
+  font: 14px/17px normal verdana, arial;
+  margin: 2rem;
+}
+
+h2 {
+  line-height: 1.8rem;
+}
+
+code {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #eee;
+  color: green;
+  padding: 2px;
+}
+
+code.pre {
+  white-space: pre;
+  display: inline-block;
+  padding: 5px;
+  vertical-align: top;
+}
+
+ul {
+  margin-left: -1.5rem;
+}
+
+li {
+  list-style: '\1F5D3';
+  padding-left: 6px;
+  margin-top: 0.5rem;
+  font-family: monospace;
+}
+
+li div.explain {
+  font-weight: normal;
+  background-color: #EEE;
+  padding: 1rem;
+  border: 1px solid #999;
+  margin: -0.9rem 0 1.5rem -1.2rem;
+}
+
+div.explain h2 {
+  margin: 0 0 0.6rem 0;
+}
+
+div.explain div:not(.first) {
+  margin-top: 0.7rem;
+}
+
+div.explain pre {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1rem;
+  color: green;
+}
+
+li.head {
+  list-style-type: none;
+  font-weight: bold;
+  margin-top: 1.2rem;
+  margin-bottom: -0.2rem;
+  font-family: revert;
+}
+
+.err {
+  font-style: italic;
+  color: red;
+}
+
+.waiting {
+  color: #c0c0c0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: red;
+}
+
+.comment {
+  color: grey;
+}
+
+.ok {
+  font-weight: bold;
+  color: green;
+}
+
+.NOTok {
+  font-weight: bold;
+  color: red;
+}
