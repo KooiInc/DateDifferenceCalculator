@@ -143,7 +143,7 @@ function printFactory() {
 }
 
 function printHeader() {
-  const example = `<pre class="language-javascript line-numbers"><code class="js">// import & initialize
+  const example = `<pre class="language-javascript line-numbers"><code class="js">// import (async) & initialize
 const ddFactory = (await import(\`//kooiinc.github.io/DateDifferenceCalculator/index.js\`)).default;
 const diffCalc = ddFactory();
 
