@@ -7,7 +7,10 @@ The function returns the time passed in years, months, days, hours etc. for a da
 For example, the time from now until next new year:
 
 ```js
-// import dateDiffCalculatorFactory from [location of index.js]
+/*
+ * import dateDiffCalculatorFactory from [location of index.js];
+ * location @github: "https://kooiinc.github.io/DateDifferenceCalculator/index.js"
+ */
 const diffCalc = dateDiffCalculatorFactory();
 const now = new Date();
 const newYear = new Date(now.getFullYear(), 11, 31);
