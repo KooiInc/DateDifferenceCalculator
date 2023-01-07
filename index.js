@@ -5,18 +5,18 @@ function dateDiffCalculatorFactory() {
   const pad0 = number => `${number}`.padStart(2, `0`);
   const time2Number = ({hours, minutes, seconds}) => +[hours, minutes, seconds].map(u => pad0(u)).join(``);
   const retrieveTime = dateFragments => time2Number(dateFragments);
-  const retrieveRemainingMonths = (start, end, notFull) 
-    => end.month === start.month
-        ? 0 : end.month > start.month && end.date > start.date
-        ? end.month - start.month : end.month > start.month && end.date < start.date
-        ? end.month - start.month - 1 : end.month > start.month
-        ? end.month - start.month : 12 - start.month + end.month + +notFull;
-  const retrieveRemainingDays = (start, end, endTimeLess)
-    => start.month > end.month && endTimeLess
-        ? daysInMonth(start) - start.date + end.date + endTimeLess
-        : Math.abs(start.date - end.date) + endTimeLess;
-  const retrieveDate4RemainingTimeCalculation = (start, end, endTimeLess) 
-    => new Date( end.year, end.month, end.date - +(endTimeLess),  start.hours, start.minutes, start.seconds );
+  const retrieveRemainingMonths = (start, end, notFull) => 
+    end.month === start.month
+      ? 0 : end.month > start.month && end.date > start.date
+      ? end.month - start.month : end.month > start.month && end.date < start.date
+      ? end.month - start.month - 1 : end.month > start.month
+      ? end.month - start.month : 12 - start.month + end.month + +notFull;
+  const retrieveRemainingDays = (start, end, endTimeLess) => 
+    start.month > end.month && endTimeLess
+      ? daysInMonth(start) - start.date + end.date + endTimeLess
+      : Math.abs(start.date - end.date) + endTimeLess;
+  const retrieveDate4RemainingTimeCalculation = (start, end, endTimeLess) => 
+    new Date( end.year, end.month, end.date - +(endTimeLess),  start.hours, start.minutes, start.seconds );
 
   function compositions() {
     const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
