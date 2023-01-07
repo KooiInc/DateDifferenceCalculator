@@ -17,8 +17,7 @@ function dateDiffCalculatorFactory() {
       : Math.abs(start.date - end.date) + endTimeLess;
   const retrieveDate4RemainingTimeCalculation = (start, end, endTimeLess) =>
     new Date( end.year, end.month, end.date - +(endTimeLess),  start.hours, start.minutes, start.seconds );
-
-  function calculator(d1, d2) {
+  const diffCalculator = function (d1, d2) {
     const [start, end] = sortAndFragmentize([d1, d2]);
     const lastYearNotFull = -( end.year !== start.year && end.month < start.month );
     const lastMonthNotFull = -( end.month < start.month && end.date < start.date );
@@ -33,14 +32,13 @@ function dateDiffCalculatorFactory() {
       years: remainingYears, months: remainingMonths, days: remainingDays,
       hours: remainingHours >= 24 ? remainingHours - 24 : remainingHours,
       minutes: Math.round(lastDiffs / 60_000) % 60,
-      seconds: Math.floor(lastDiffs / 1_000) % 60,
-    };
+      seconds: Math.floor(lastDiffs / 1_000) % 60, };
     return { ...diffs,
       toString: () => diffsStringifier({diffs}),
       fullString: () => diffsStringifier({diffs, all: true}) };
   }
 
-  return (date, compare2Date) => calculator(date, compare2Date);
+  return (date, compare2Date) => diffCalculator(date, compare2Date);
 }
 
 function compositions() {
