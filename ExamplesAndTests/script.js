@@ -139,42 +139,46 @@ function printFactory() {
 }
 
 function printHeader() {
-  let to;
-  const code = `
-    <pre>
-      const diffCalc = dateDiffCalculatorFactory();
-      const now = new Date();
-      const newYear = new Date(2023, 11, 31);
-      const TimeToNewYear = diffCalc(now, newYear);
-    </pre>`.replace(/\n\s+/g, `\n`);
+  const example = `<pre class="language-javascript line-numbers"><code class="js">function displayTime2NewYear() {
+  let to = 0;
+  const newYear = new Date(2023, 11, 31);
+  const nwYearElem = document.querySelector(\`#showNwYear\`);
+  const run = () =>  {
+      clearTimeout(to);
+      nwYearElem.innerHTML = \`<b>\${diffCalc(new Date(), newYear).fullString()}</b>\`;
+      to = setTimeout(run, 1000);
+  };
+  run();
+}</code></pre>`;
+  print(
+    `!!
+    <div class="explain">
+      <h2>Tests for time between two dates calculation</h2>
+      <div class="first"><code>dateDiffCalculatorFactory</code> returns a function 
+      to calculate the time between two dates. 
+      <div>The function returns the time passed in years, months, days, hours etc. 
+      for a date compared to a later or earlier date.</div>
+      <div>For example, the time from now until next new year in a function:
+        ${example}
+        <div>
+          <div>So, until new year (midnight of the last day of the current year):</div>
+          <span id="showNwYear"></span>
+        </div>
+        </div>
+      <div>In the following: tests for a number of date pairs.</div>
+    </div>`);
+  Prism.highlightElement(document.querySelector(`pre.language-javascript code`));
+  displayTime2NewYear();
 
-    print(
-      `!!
-      <div class="explain">
-        <h2>Tests for time between two dates calculation</h2>
-        <div class="first"><code>dateDiffCalculatorFactory</code> returns a function 
-        to calculate the time between two dates. 
-        <div>The function returns the time passed in years, months, days, hours etc. 
-        for a date compared to a later or earlier date.</div>
-        <div>For example, the time from now until next new year:
-          ${code}
-          <span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;// Note: parameter order is not relevant ;)</span>
-          <div>
-            <div>So, until new year (midnight of the last day of the current year):</div>
-            <span id="showNwYear"></span>
-          </div>
-          </div>
-        <div>In the following: tests for a number of date pairs.</div>
-      </div>`);
-
-  showTime2NewYear();
-
-  function showTime2NewYear() {
-    clearTimeout(to);
-    showTime2NewYear.el = showTime2NewYear.el || document.querySelector(`#showNwYear`);
-    const now = new Date();
+  function displayTime2NewYear() {
+    let to = 0;
     const newYear = new Date(2023, 11, 31);
-    showTime2NewYear.el.innerHTML = `<b>${diffCalc(now, newYear).fullString()}</b>`;
-    to = setTimeout(showTime2NewYear, 1000);
+    const nwYearElem = document.querySelector(`#showNwYear`);
+    const run = () =>  {
+      clearTimeout(to);
+      nwYearElem.innerHTML = `<b>${diffCalc(new Date(), newYear).fullString()}</b>`;
+      to = setTimeout(run, 1000);
+    };
+    run();
   }
 }
