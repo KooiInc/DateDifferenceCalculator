@@ -43,71 +43,75 @@ function runTests() {
     () => {
       const start = xDate(new Date());
       const end = start.clone().add(`1 year`);
-      return testFactory(...[start.date, end.date, `1`, 1]); },
+      return testFactory(...[start.date, end.date, 1, 1]); },
     () => {
       const start = xDate();
       const end =  start.clone().add("1 year, 1 month");
-      return testFactory(...[start.date, end.date, `2`, 1, 1]); },
+      return testFactory(...[start.date, end.date, 2, 1, 1]); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("1 year, 1 month, 1 day");
-      return testFactory(start.date, end.date, `3`, 1, 1, 1); },
+      return testFactory(start.date, end.date, 3, 1, 1, 1); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("1 year, -1 month, 1 day, 5 hours");
-      return testFactory(start.date, end.date, `4`, 0, 11, 1, 5); },
+      return testFactory(start.date, end.date, 4, 0, 11, 1, 5); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours");
-      return testFactory(start.date, end.date, `5`, 3, 7, 7, 20); },
+      return testFactory(start.date, end.date, 5, 3, 7, 7, 20); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours, -25 minutes");
-      return testFactory(start.date, end.date, `6`, 3, 7, 7, 20, 35); },
+      return testFactory(start.date, end.date, 6, 3, 7, 7, 20, 35); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours, -25 minutes, 130 seconds");
-      return testFactory(start.date, end.date, `7`, 3, 7, 7, 20, 37, 10); },
-    () => {
-      const start = xDate(new Date(1957, 2, 18, 13, 0, 0));
-      const end = start.clone().add(`65 years, 9 months, 13 days, 22 hours, 14 minutes, 12 seconds`);
-      return testFactory(start.date, end.date, `8`, 65, 9, 13, 22, 14, 12); },
-    () => {
-      const start = xDate(new Date(1957, 2, 18, 13, 0, 0), (d) => d.toLocaleString(`nl`) );
-      const end = start.clone().set(new Date(2023, 1, 19, 15, 0, 0));
-      return testFactory(start.date, end.date, `9`, 65, 11, 1, 2); },
+      return testFactory(start.date, end.date, 7, 3, 7, 7, 20, 37, 10); },
     () => {
       const start = xDate(new Date(1991, 7, 27, 12, 30), tls);
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, `10`, 31, 4, 4, 12, 30); },
+      return testFactory(start.date, end.date, 8, 31, 4, 4, 12, 30); },
     () => {
       const start = xDate(new Date(1994, 10, 5, 1, 30), (d) => d.toTimeString());
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, `11`, 28, 1, 25, 23, 30); },
+      return testFactory(start.date, end.date, 9, 28, 1, 25, 23, 30); },
     () => {
       const start = xDate(new Date(1997, 3, 27, 2), (d) => d.toTimeString());
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, `12`, 25, 8, 3, 22); },
+      return testFactory(start.date, end.date, 10, 25, 8, 3, 22); },
+    () => {
+      const start = xDate(new Date(1928, 2, 15));
+      const end = start.clone().set(new Date(2023, 2, 15));
+      return testFactory(start.date, end.date, 11, 95); },
+    () => {
+      const start = xDate(new Date(1933, 1, 5));
+      const end = start.clone().set(new Date(2023, 1, 5));
+      return testFactory(start.date, end.date, 12, 90); },
     () => {
         const start = xDate(new Date(2023, 0, 3));
         const end = start.clone().add("11 months", "28 days", "-5 hours");
         return testFactory(start.date, end.date, 13, 0, 11, 27, 19); },
     () => {
+      const start = xDate(new Date(1957, 2, 18, 13, 0, 0), (d) => d.toLocaleString(`nl`) );
+      const end = start.clone().set(new Date(2023, 1, 19, 15, 0, 0));
+      return testFactory(start.date, end.date, 14, 65, 11, 1, 2); },
+    () => {
       const start = xDate(new Date());
       const end = start.clone().add("5 hours");
-      return testFactory(start.date, end.date, 14, 0, 0, 0, 5); },
+      return testFactory(start.date, end.date, 15, 0, 0, 0, 5); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("-13 hours");
-      return testFactory(start.date, end.date, 15, 0, 0, 0, 13); },
+      return testFactory(start.date, end.date, 16, 0, 0, 0, 13); },
     () => {
       const start = xDate(new Date());
       const end = start.clone();
-      return testFactory(start.date, end.date, `16 (toString equal dates)`); },
+      return testFactory(start.date, end.date, `17 (toString equal dates)`); },
     () => {
       const start = xDate(new Date());
       const end = start.clone();
-      return testFactory(start.date, end.date, `17 (fullString equal dates)`, 0, 0, 0, 0, 0, 0); },
+      return testFactory(start.date, end.date, `18 (fullString equal dates)`, 0, 0, 0, 0, 0, 0); },
   ].forEach((test) => print(test().result));
 }
 
