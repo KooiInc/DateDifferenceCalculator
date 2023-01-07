@@ -6,20 +6,6 @@ const diffCalc = dateDiffCalculatorFactory();
 printHeader();
 runTests();
 
-function mimicStringifier() {
-  const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
-  const single = (n, term) => (n === 1 ? term.slice(0, -1) : term);
-  const aggregateDiffs = ({diffs, all}) => all
-    ? Object.entries(diffs)
-    : Object.entries(diffs).filter(([, value]) => all ? value : value > 0);
-  const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
-    [...acc, `${value} ${single(value, key)}`], [] );
-  const diffs2SingleString = diffStrings  => diffStrings.length < 1
-    ? `Dates are equal` : `${diffStrings.slice(0, -1).join(`, `)}${
-      diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
-  return pipe(aggregateDiffs, stringifyDiffs, diffs2SingleString)
-}
-
 function runTests() {
   const stringify = mimicStringifier();
   const xDate = xDFactory();
@@ -123,6 +109,20 @@ function runTests() {
       const end = start.clone();
       return testFactory(start.date, end.date, `17 (fullString equal dates)`, 0, 0, 0, 0, 0, 0); },
   ].forEach((test) => print(test().result));
+}
+
+function mimicStringifier() {
+  const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
+  const single = (n, term) => (n === 1 ? term.slice(0, -1) : term);
+  const aggregateDiffs = ({diffs, all}) => all
+    ? Object.entries(diffs)
+    : Object.entries(diffs).filter(([, value]) => all ? value : value > 0);
+  const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
+    [...acc, `${value} ${single(value, key)}`], [] );
+  const diffs2SingleString = diffStrings  => diffStrings.length < 1
+    ? `Dates are equal` : `${diffStrings.slice(0, -1).join(`, `)}${
+      diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
+  return pipe(aggregateDiffs, stringifyDiffs, diffs2SingleString)
 }
 
 function printFactory() {
