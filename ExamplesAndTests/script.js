@@ -6,7 +6,22 @@ const diffCalc = dateDiffCalculatorFactory();
 printHeader();
 runTests();
 
+function mimicStringifier() {
+  const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
+  const single = (n, term) => (n === 1 ? term.slice(0, -1) : term);
+  const aggregateDiffs = ({diffs, all}) => all
+    ? Object.entries(diffs)
+    : Object.entries(diffs).filter(([, value]) => all ? value : value > 0);
+  const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
+    [...acc, `${value} ${single(value, key)}`], [] );
+  const diffs2SingleString = diffStrings  => diffStrings.length < 1
+    ? `Dates are equal` : `${diffStrings.slice(0, -1).join(`, `)}${
+      diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
+  return pipe(aggregateDiffs, stringifyDiffs, diffs2SingleString)
+}
+
 function runTests() {
+  const stringify = mimicStringifier();
   const xDate = xDFactory();
   const tls = (d) => d.toLocaleString(`en-GB`);
   const compare = (diffs, y = 0, mo = 0, d = 0, h = 0, mi = 0, s = 0 ) => {
@@ -15,17 +30,12 @@ function runTests() {
       diffs.days === d &&  diffs.hours === h &&
       diffs.minutes === mi && diffs.seconds === s );
   };
-  const single = (n, term) => (n === 1 ? term.slice(0, -1) : term);
-  const stringify = (diffs, all) => {
-    const filtered = Object.entries(diffs)
-      .reduce( (acc, [key, value]) => (value > 0 || all && !/string/i.test(key) ? { ...acc, [key]: value } : acc), {} );
-    const strings = Object.entries(filtered)
-      .reduce( (acc, [key, value]) => [...acc, `${value} ${single(value, key)}`], [] );
-    return `${strings.slice(0, -1).join(`, `)}${strings.length > 1 ? ` and ` : ``}${strings.slice(-1).shift()}`;
-  };
-  const getExpected = (diffs, diffsTst, all) =>
-    diffsTst.length < 1 ? `Dates are equal` : stringify( Object.keys(diffs)
-        .slice(0, -1) .reduce((acc, k, i) => ({ ...acc, [k]: diffsTst[i] || 0 }), {} ), all );
+
+  const getExpected = (diffs, diffsTst, all) => {
+    const diffsTstObj = Object.keys(diffs).reduce( (acc, k, i) =>
+      !/string/i.test(k) && {...acc, [k]: diffsTst[i]} || acc, {} );
+    return stringify({diffs: diffsTstObj, all});
+  }
 
   const testFactory = function(start, end, testNr = 0, ...diffsTst) {
     const allZeros = diffsTst.length && diffsTst.reduce( (acc, v) => acc + v, 0) === 0;
@@ -33,7 +43,8 @@ function runTests() {
       get result() {
         const diffs = diffCalc(start, end);
         const se = `<br>from: ${tls(end > start ? start : end)} to: ${tls(end > start ? end : start)}<br>`;
-        const expRec = `&nbsp;&nbsp;=> Expected: ${getExpected(diffs, allZeros ? 0 : diffsTst, allZeros)}<br>&nbsp;&nbsp;=> Received:  ${allZeros ? diffs.fullString() : diffs}`;
+        const expRec = `&nbsp;&nbsp;=> Expected: ${getExpected(diffs, diffsTst, allZeros)}
+            <br>&nbsp;&nbsp;=> Received:  ${allZeros ? diffs.fullString() : diffs}`;
         const compared = compare(diffs, ...diffsTst);
         return compared
           ? `<span class="ok">${testNr ? ` <b>Test #${testNr}</b>` : `` } OK</span>${se}${expRec}`
