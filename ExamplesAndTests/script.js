@@ -1,6 +1,7 @@
 const { print } = printFactory();
 const xDFactory = (await import(`https://kooiinc.github.io/datefiddler/datefiddler.js`)).default;
-import dateDiffCalculatorFactory from "../index.js";
+//import dateDiffCalculatorFactory from "../index.js";
+import dateDiffCalculatorFactory from "/ddcLib/index.js";
 const diffCalc = dateDiffCalculatorFactory();
 printHeader();
 runTests();
@@ -15,23 +16,24 @@ function runTests() {
       diffs.minutes === mi && diffs.seconds === s );
   };
   const single = (n, term) => (n === 1 ? term.slice(0, -1) : term);
-  const stringify = (diffs) => {
+  const stringify = (diffs, all) => {
     const filtered = Object.entries(diffs)
-      .reduce( (acc, [key, value]) => (value > 0 ? { ...acc, [key]: value } : acc), {} );
+      .reduce( (acc, [key, value]) => (value > 0 || all && !/string/i.test(key) ? { ...acc, [key]: value } : acc), {} );
     const strings = Object.entries(filtered)
       .reduce( (acc, [key, value]) => [...acc, `${value} ${single(value, key)}`], [] );
     return `${strings.slice(0, -1).join(`, `)}${strings.length > 1 ? ` and ` : ``}${strings.slice(-1).shift()}`;
   };
-  const getExpected = (diffs, diffsTst) =>
+  const getExpected = (diffs, diffsTst, all) =>
     diffsTst.length < 1 ? `Dates are equal` : stringify( Object.keys(diffs)
-        .slice(0, -1) .reduce((acc, k, i) => ({ ...acc, [k]: diffsTst[i] || 0 }), {} ) );
+        .slice(0, -1) .reduce((acc, k, i) => ({ ...acc, [k]: diffsTst[i] || 0 }), {} ), all );
 
-  const testFactory = function (start, end, testNr = 0, ...diffsTst) {
+  const testFactory = function(start, end, testNr = 0, ...diffsTst) {
+    const allZeros = diffsTst.length && diffsTst.reduce( (acc, v) => acc + v, 0) === 0;
     return {
       get result() {
         const diffs = diffCalc(start, end);
         const se = `<br>from: ${tls(end > start ? start : end)} to: ${tls(end > start ? end : start)}<br>`;
-        const expRec = `&nbsp;&nbsp;=> Expected: ${getExpected(diffs, diffsTst)}<br>&nbsp;&nbsp;=> Received:  ${diffs}`;
+        const expRec = `&nbsp;&nbsp;=> Expected: ${getExpected(diffs, allZeros ? 0 : diffsTst, allZeros)}<br>&nbsp;&nbsp;=> Received:  ${allZeros ? diffs.fullString() : diffs}`;
         const compared = compare(diffs, ...diffsTst);
         return compared
           ? `<span class="ok">${testNr ? ` <b>Test #${testNr}</b>` : `` } OK</span>${se}${expRec}`
@@ -104,7 +106,11 @@ function runTests() {
     () => {
       const start = xDate(new Date());
       const end = start.clone();
-      return testFactory(start.date, end.date, 16); },
+      return testFactory(start.date, end.date, `16 (toString equal dates)`); },
+    () => {
+      const start = xDate(new Date());
+      const end = start.clone();
+      return testFactory(start.date, end.date, `17 (fullString equal dates)`, 0, 0, 0, 0, 0, 0); },
   ].forEach((test) => print(test().result));
 }
 
