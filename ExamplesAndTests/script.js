@@ -23,7 +23,7 @@ function runTests() {
     return `${strings.slice(0, -1).join(`, `)}${strings.length > 1 ? ` and ` : ``}${strings.slice(-1).shift()}`;
   };
   const getExpected = (diffs, diffsTst) =>
-    stringify( Object.keys(diffs)
+    diffsTst.length < 1 ? `Dates are equal` : stringify( Object.keys(diffs)
         .slice(0, -1) .reduce((acc, k, i) => ({ ...acc, [k]: diffsTst[i] || 0 }), {} ) );
 
   const testFactory = function (start, end, testNr = 0, ...diffsTst) {
@@ -31,7 +31,7 @@ function runTests() {
       get result() {
         const diffs = diffCalc(start, end);
         const se = `<br>from: ${tls(end > start ? start : end)} to: ${tls(end > start ? end : start)}<br>`;
-        const expRec = `&nbsp;&nbsp;=> Expected: ${getExpected(diffs, diffsTst)}<br>&nbsp;&nbsp;=> Received:  ${stringify(diffs)}`;
+        const expRec = `&nbsp;&nbsp;=> Expected: ${getExpected(diffs, diffsTst)}<br>&nbsp;&nbsp;=> Received:  ${diffs}`;
         const compared = compare(diffs, ...diffsTst);
         return compared
           ? `<span class="ok">${testNr ? ` <b>Test #${testNr}</b>` : `` } OK</span>${se}${expRec}`
@@ -101,6 +101,10 @@ function runTests() {
       const start = xDate(new Date());
       const end = start.clone().add("-13 hours");
       return testFactory(start.date, end.date, 15, 0, 0, 0, 13); },
+    () => {
+      const start = xDate(new Date());
+      const end = start.clone();
+      return testFactory(start.date, end.date, 16); },
   ].forEach((test) => print(test().result));
 }
 
