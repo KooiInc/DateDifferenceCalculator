@@ -27,11 +27,10 @@ function dateDiffCalculatorFactory() {
     const aggregateDiffs = ({diffs, all}) => all 
       ? Object.entries(diffs) 
       : Object.entries(diffs).filter(([, value]) => all ? value : value > 0);
-    const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value]) 
-      => [...acc, `${value} ${singleOrMultiple(value, key)}`], [] );
-    const diffs2SingleString = diffStrings 
-      => `${diffStrings.slice(0, -1).join(`, `)}${
-            diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
+    const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  => 
+      [...acc, `${value} ${singleOrMultiple(value, key)}`], [] );
+    const diffs2SingleString = diffStrings  => `${diffStrings.slice(0, -1).join(`, `)}${
+      diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
     const firstDayOfNextMonth = ({year, month}) => new Date(year, month + 1, 1)
     const daysInMonth = date => new Date(date.setDate(date.getDate() - 1)).getDate();
     const sortDates = ([d1, d2]) => [d1, d2].sort( (a, b) => +a - +b);
