@@ -77,17 +77,17 @@ function runTests() {
       const end = start.clone().set(new Date(2023, 1, 19, 15, 0, 0));
       return testFactory(start.date, end.date, `9`, 65, 11, 1, 2); },
     () => {
-      const start = xDate(new Date(1933, 1, 5), tls);
-      const end = start.clone().set(new Date(2023, 0, 3));
-      return testFactory(start.date, end.date, `10`, 89, 10, 2); },
+      const start = xDate(new Date(1991, 7, 27, 12, 30), tls);
+      const end = start.clone().set(new Date(2023, 0, 1));
+      return testFactory(start.date, end.date, `10`, 31, 4, 4, 12, 30); },
     () => {
-      const start = xDate(new Date(2023, 2, 1), (d) => d.toTimeString());
-      const end = start.clone().set(new Date(2023, 3, 20));
-      return testFactory(start.date, end.date, `11`, 0, 1, 19); },
+      const start = xDate(new Date(1994, 10, 5, 1, 30), (d) => d.toTimeString());
+      const end = start.clone().set(new Date(2023, 0, 1));
+      return testFactory(start.date, end.date, `11`, 28, 1, 25, 23, 30); },
     () => {
-      const start = xDate(new Date(2023, 2, 20), (d) => d.toTimeString());
-      const end = start.clone().set(new Date(2023, 8, 5));
-      return testFactory(start.date, end.date, `12`, 0, 5, 15); },
+      const start = xDate(new Date(1997, 3, 27, 2), (d) => d.toTimeString());
+      const end = start.clone().set(new Date(2023, 0, 1));
+      return testFactory(start.date, end.date, `12`, 25, 8, 3, 22); },
     () => {
         const start = xDate(new Date(2023, 0, 3));
         const end = start.clone().add("11 months", "28 days", "-5 hours");
