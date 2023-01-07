@@ -16,8 +16,10 @@ function runTests() {
   };
   const single = (n, term) => (n === 1 ? term.slice(0, -1) : term);
   const stringify = (diffs) => {
-    const filtered = Object.entries(diffs).reduce( (acc, [key, value]) => (value > 0 ? { ...acc, [key]: value } : acc), {} );
-    const strings = Object.entries(filtered).reduce( (acc, [key, value]) => [...acc, `${value} ${single(value, key)}`], [] );
+    const filtered = Object.entries(diffs)
+      .reduce( (acc, [key, value]) => (value > 0 ? { ...acc, [key]: value } : acc), {} );
+    const strings = Object.entries(filtered)
+      .reduce( (acc, [key, value]) => [...acc, `${value} ${single(value, key)}`], [] );
     return `${strings.slice(0, -1).join(`, `)}${strings.length > 1 ? ` and ` : ``}${strings.slice(-1).shift()}`;
   };
   const getExpected = (diffs, diffsTst) =>
