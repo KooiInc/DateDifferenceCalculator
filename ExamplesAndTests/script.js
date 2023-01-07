@@ -139,7 +139,11 @@ function printFactory() {
 }
 
 function printHeader() {
-  const example = `<pre class="language-javascript line-numbers"><code class="js">function displayTime2NewYear() {
+  const example = `<pre class="language-javascript line-numbers"><code class="js">// import & initialize
+const ddFactory = (await import(\`https://kooiinc.github.io/DateDifferenceCalculator/index.js\`)).default;
+const diffCalc = ddFactory();
+
+function displayTime2NewYear() {
   let to = 0;
   const newYear = new Date(2023, 11, 31);
   const nwYearElem = document.querySelector(\`#showNwYear\`);
