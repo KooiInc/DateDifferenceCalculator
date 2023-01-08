@@ -18,6 +18,7 @@ function runTests() {
   };
 
   const getExpected = (diffs, diffsTst, all) => {
+    console.log(diffs.totals)
     const diffsTstObj = Object.keys(diffs).reduce( (acc, k, i) =>
       !/string/i.test(k) && {...acc, [k]: diffsTst[i]} || acc, {} );
     return stringify({diffs: diffsTstObj, all});
@@ -77,9 +78,9 @@ function runTests() {
       const end = start.clone().set(new Date(2023, 0, 1));
       return testFactory(start.date, end.date, 9, 28, 2, 25, 23, 30); },
     () => {
-      const start = xDate(new Date(1997, 3, 27, 2));
+      const start = xDate(new Date(1997, 3, 24, 2));
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, 10, 25, 8, 3, 22); },
+      return testFactory(start.date, end.date, 10, 25, 8, 6, 22); },
     () => {
       const start = xDate(new Date(1928, 2, 15));
       const end = start.clone().set(new Date(2023, 2, 15));
@@ -119,8 +120,8 @@ function mimicStringifier() {
   const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
   const single = (n, term) => (n === 1 ? term.slice(0, -1) : term);
   const aggregateDiffs = ({diffs, all}) => all
-    ? Object.entries(diffs)
-    : Object.entries(diffs).filter(([, value]) => all ? value : value > 0);
+    ? Object.entries(diffs).filter( ([key,]) => key !== `totals`)
+    : Object.entries(diffs).filter(([, value]) => all ? value || 0: value > 0);
   const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
     [...acc, `${value} ${single(value, key)}`], [] );
   const diffs2SingleString = diffStrings  => diffStrings.length < 1

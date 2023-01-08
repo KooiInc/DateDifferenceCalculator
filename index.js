@@ -18,6 +18,7 @@ function dateDiffCalculatorFactory() {
   const retrieveDate4RemainingTimeCalculation = (start, end, endTimeLess) =>
     new Date( end.year, end.month, end.date - +(endTimeLess),  start.hours, start.minutes, start.seconds );
   const diffCalculator = function (d1, d2) {
+    const totalDiff = Math.abs(d1 - d2);
     const [start, end] = sortAndFragmentize([d1, d2]);
     const lastYearNotFull = -( end.year !== start.year && end.month < start.month );
     const lastMonthNotFull = -( end.month < start.month && end.date < start.date );
@@ -32,7 +33,14 @@ function dateDiffCalculatorFactory() {
       years: remainingYears, months: remainingMonths, days: remainingDays,
       hours: remainingHours >= 24 ? remainingHours - 24 : remainingHours,
       minutes: Math.round(lastDiffs / 60_000) % 60,
-      seconds: Math.floor(lastDiffs / 1_000) % 60, };
+      seconds: Math.floor(lastDiffs / 1_000) % 60,
+      totals: {
+        years: remainingYears,
+        months: remainingMonths + (12 * remainingYears),
+        days: Math.floor(totalDiff / (3_600_000 * 24)),
+        hours: Math.floor(totalDiff / 3_600_000),
+        minutes: Math.floor(totalDiff / 60_000),
+        seconds: Math.floor(totalDiff / 1_000) }, };
     return { ...diffs,
       toString: () => diffsStringifier({diffs}),
       fullString: () => diffsStringifier({diffs, all: true}) };
@@ -48,8 +56,8 @@ function compositions() {
     year: date.getFullYear(), month: date.getMonth(), date: date.getDate(),
     hours: date.getHours(), minutes: date.getMinutes(), seconds: date.getSeconds(), } );
   const aggregateDiffs = ({diffs, all}) => all
-    ? Object.entries(diffs)
-    : Object.entries(diffs).filter(([, value]) => all ? value : value > 0);
+    ? Object.entries(diffs).filter( ([key,]) => key !== `totals`)
+    : Object.entries(diffs).filter(([key, value]) => all ? value : value > 0);
   const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
     [...acc, `${value} ${singleOrMultiple(value, key)}`], [] );
   const diffs2SingleString = diffStrings  => diffStrings.length < 1
