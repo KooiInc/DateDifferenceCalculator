@@ -1,74 +1,70 @@
 export default dateDiffCalculatorFactory;
 
-function dateDiffCalculatorFactory() {
-  const [diffsStringifier, daysInMonth, sortAndFragmentize] = compositions();
-  const pad0 = number => `${number}`.padStart(2, `0`);
-  const time2Number = ({hours, minutes, seconds}) => +[hours, minutes, seconds].map(u => pad0(u)).join(``);
-  const retrieveTime = dateFragments => time2Number(dateFragments);
-  const retrieveRemainingMonths = (start, end, notFull) =>
-    end.month === start.month
-      ? 0 : end.month > start.month && end.date > start.date
-      ? end.month - start.month : end.month > start.month && end.date < start.date
-      ? end.month - start.month - 1 : end.month > start.month
-      ? end.month - start.month : 12 - start.month + end.month + +notFull;
-  const retrieveRemainingDays = (start, end, endTimeLess) =>
-    start.month > end.month && endTimeLess
-      ? daysInMonth(start) - start.date + end.date + endTimeLess
-      : Math.abs(start.date - end.date) + endTimeLess;
-  const retrieveDate4RemainingTimeCalculation = (start, end, endTimeLess) =>
-    new Date( end.year, end.month, end.date - +(endTimeLess),  start.hours, start.minutes, start.seconds );
-  const diffCalculator = function (d1, d2) {
-    const totalDiff = Math.abs(d1 - d2);
-    const [start, end] = sortAndFragmentize([d1, d2]);
-    const lastYearNotFull = -( end.year !== start.year && end.month < start.month );
-    const lastMonthNotFull = -( end.month < start.month && end.date < start.date );
-    const lastDayNotFull = -( retrieveTime(end) < retrieveTime(start) );
-    const remainingTimeCalculationDate = retrieveDate4RemainingTimeCalculation(start, end, -lastDayNotFull);
-    const remainingYears = end.year - start.year + lastYearNotFull;
-    const remainingMonths = retrieveRemainingMonths(start, end, lastMonthNotFull);
-    const lastDiffs = Math.abs(remainingTimeCalculationDate - new Date(...Object.values(end)));
-    const remainingDays = retrieveRemainingDays(start, end, lastDayNotFull);
-    const remainingHours = Math.abs(Math.round(lastDiffs / 3_600_000));
-    const diffs = {
-      years: remainingYears, months: remainingMonths, days: remainingDays,
-      hours: remainingHours >= 24 ? remainingHours - 24 : remainingHours,
-      minutes: Math.round(lastDiffs / 60_000) % 60,
-      seconds: Math.floor(lastDiffs / 1_000) % 60,
-      totals: {
-        years: remainingYears,
-        months: remainingMonths + (12 * remainingYears),
-        days: Math.floor(totalDiff / (3_600_000 * 24)),
-        hours: Math.floor(totalDiff / 3_600_000),
-        minutes: Math.floor(totalDiff / 60_000),
-        seconds: Math.floor(totalDiff / 1_000) }, };
-    return { ...diffs,
-      toString: () => diffsStringifier({diffs}),
-      fullString: () => diffsStringifier({diffs, all: true}) };
-  }
+function dateDiffCalculatorFactory(forTest = false) {
+  let calcDiff = diffsFactory(forTest);
 
-  return (date, compare2Date) => diffCalculator(date, compare2Date);
+  return function(date, compare2Date) {
+    const diffs = calcDiff({d1: date, d2: compare2Date});
+    return {...diffs, toString: () => diffs.result};
+  };
 }
 
-function compositions() {
-  const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
+function diffsFactory(forTest = false) {
+  const pipe = (...functions) => initial => functions.reduce((param, func) => func(param), initial);
   const singleOrMultiple = (numberOf, term) => (numberOf === 1 ? term.slice(0, -1) : term);
+  const pad0 = (number = 0) => `${number}`.padStart(2, `0`);
   const date2Fragments = date => ( {
-    year: date.getFullYear(), month: date.getMonth(), date: date.getDate(),
-    hours: date.getHours(), minutes: date.getMinutes(), seconds: date.getSeconds(), } );
-  const aggregateDiffs = ({diffs, all}) => all
-    ? Object.entries(diffs).filter( ([key,]) => key !== `totals`)
-    : Object.entries(diffs).filter(([key, value]) => all ? value : value > 0);
+    year: date.getFullYear(), month: date.getMonth(), date: date.getDate(), hours: date.getHours(),
+    minutes: date.getMinutes(), seconds: date.getSeconds(), milliseconds: date.getMilliseconds()} );
+  const time2Number = ({hours = 0, minutes = 0, seconds = 0} = {}) =>
+    +([hours, minutes, seconds].map( u => pad0(u)).join(``));
+  const retrieveTime = frags => time2Number(frags);
+  const lastYear = (d1, d2) => d2.year !== d1.year && d2.month < d1.month ? -1 : 0;
+  const lastMonth = ({d1, d2}) => d2.month < d1.month && d2.date < d1.date ? -1 : 0;
+  const lastDay = ({d1, d2}) => retrieveTime(d2) < retrieveTime(d1) ? -1 : 0;
+  const getYears = ({d1, d2}) => (d2.year - d1.year) + (lastYear(d1, d2));
+  const retrieveRemainingMonths = ({d1, d2}, notFull) => {
+    return d2.month === d1.month
+      ? 0 : d2.month > d1.month && d2.date > d1.date
+        ? d2.month - d1.month : d2.month > d1.month && d2.date < d1.date
+          ? d2.month - d1.month - 1 : d2.month > d1.month
+            ? d2.month - d1.month : 12 - d1.month + d2.month + notFull;
+  };
+  const firstDayOfNextMonth = ({year, month}) => new Date(year, month + 1, 1);
+  const daysInMonth = date => new Date(date.setDate(date.getDate() - 1)).getDate();
+  const daysOfMonth = pipe(firstDayOfNextMonth, daysInMonth);
+  const retrieveRemainingDays = (aggr, minusLastDay) =>
+    aggr.d2.date < aggr.d1.date && aggr.d2.month !== aggr.d1.month
+      ? daysOfMonth(aggr.d1) - aggr.d1.date + aggr.d2.date + minusLastDay
+      : Math.abs(aggr.d2.date - aggr.d1.date + minusLastDay);
+  const retrieveRemainingHours = (aggr, lastDay) =>
+    Math.abs(aggr.d2.hours - aggr.d1.hours) + (lastDay * 24) + -(aggr.d2.minutes > aggr.d1.minutes);
+  const filterRelevant = ({values, full}) =>
+    [ Object.entries(values).filter( ([key, ]) => /^(years|month|days|hours|minutes|seconds)/i.test(key)), full ];
+  const aggregateDiffs = ([diffs, full]) =>
+    full ? diffs : diffs.filter(([, value]) => full ? +value : value > 0);
   const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
     [...acc, `${value} ${singleOrMultiple(value, key)}`], [] );
   const diffs2SingleString = diffStrings  => diffStrings.length < 1
     ? `Dates are equal` : `${diffStrings.slice(0, -1).join(`, `)}${
       diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
-  const firstDayOfNextMonth = ({year, month}) => new Date(year, month + 1, 1)
-  const daysInMonth = date => new Date(date.setDate(date.getDate() - 1)).getDate();
-  const sortDates = ([d1, d2]) => [d1, d2].sort( (a, b) => +a - +b);
-  const dates2Fragments = ([from, to]) => [date2Fragments(from), date2Fragments(to)];
-  return [
-    pipe(aggregateDiffs, stringifyDiffs, diffs2SingleString),
-    pipe(firstDayOfNextMonth, daysInMonth),
-    pipe(sortDates, dates2Fragments), ];
+  const stringifier = pipe(filterRelevant, aggregateDiffs, stringifyDiffs, diffs2SingleString);
+  const sortDates = ({d1, d2}) => [d1, d2].sort( (a, b) => +a - +b);
+  const dates2Fragments = ([start, end]) => ({d1: date2Fragments(start), d2: date2Fragments(end)});
+  const diffMs = aggr => ({ ...aggr, diff: new Date(...Object.values(aggr.d2)) - new Date(...Object.values(aggr.d1)) });
+  const years = aggr => ( {...aggr, years: getYears(aggr) } );
+  const months = aggr => ({...aggr, months: retrieveRemainingMonths(aggr, lastMonth(aggr)) });
+  const days = aggr => ({...aggr, days: retrieveRemainingDays(aggr, lastDay(aggr)) });
+  const seconds = aggr => ({...aggr, seconds: Math.floor(aggr.diff / 1000) % 60});
+  const minutes = aggr => ({...aggr, minutes: Math.floor(aggr.diff/(60_000)) % 60});
+  const hours = aggr => ({...aggr, hours: Math.abs(retrieveRemainingHours(aggr, lastDay(aggr)))});
+  const milliseconds = aggr => ({...aggr, milliseconds: Math.abs(aggr.d1.milliseconds - aggr.d2.milliseconds)});
+  const diffsResult = aggr => ({...aggr, result: stringifier({values: aggr, full: false}) } );
+  const diffsFullResult = aggr => ({...aggr, resultFull: stringifier({values: aggr, full: true}) } );
+  const includeStringifierForTests = aggr => ({...aggr, stringify: stringifier});
+  const functions2Pipe = [pipe(sortDates, dates2Fragments), diffMs, years, months, days, hours, minutes, seconds,
+    milliseconds, diffsResult, diffsFullResult];
+  forTest && functions2Pipe.push(includeStringifierForTests);
+
+  return pipe( ...functions2Pipe );
 }

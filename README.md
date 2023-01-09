@@ -21,22 +21,25 @@ const TimeToNewYear = diffCalc(now, newYear);
 
 The return value is an `Object` with the calculated difference values (`{years, months, days, hours, minutes, seconds}`).
 
-To display the difference as a string, the default `toString` of the returned object displays all values > 0
+To display the difference as a string, the default `toString` of the returned object displays all values > 0. 
+For this you can also use the `result` property of the return value. 
 
 ```js
 const now = new Date();
 const then = new Date(new Date(now).setFullYear(now.getFullYear() + 1));
 const diff = diffCalc(now, then);
 console.log(`${diff}`) //=> "1 year";
+// use property
+console.log(diff.result) //=> "1 year";
 ```
 
-To include zero values from the difference in a string, use `[returned value].fullString()`
+To include zero values from the difference in a string, use the property `[returned value].resultFull`
 
 ```js
 const now = new Date();
 const then = new Date(new Date(now).setFullYear(now.getFullYear() + 1));
 const diff = diffCalc(now, then);
-console.log(`${diff.fullString()}`) //=> "1 year, 0 months, 0 days, 0 hours, 0 minutes and 0 seconds";
+console.log(`${diff.resultFull}`) //=> "1 year, 0 months, 0 days, 0 hours, 0 minutes and 0 seconds";
 ```
 
 Tests and example can be found [here](https://kooiinc.github.io/DateDifferenceCalculator/ExamplesAndTests/).

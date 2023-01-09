@@ -2,12 +2,12 @@ const { print } = printFactory();
 const xDFactory = (await import(`https://kooiinc.github.io/datefiddler/datefiddler.js`)).default;
 const libLocation = location.host.startsWith(`dev.kooi`) ? "/ddcLib/index.js" : "../index.js";
 const dateDiffCalculatorFactory = (await import(libLocation)).default;
-const diffCalc = dateDiffCalculatorFactory();
+const diffCalc = dateDiffCalculatorFactory(true);
 printHeader();
 runTests();
 
 function runTests() {
-  const stringify = mimicStringifier();
+  //const stringify = mimicStringifier();
   const xDate = xDFactory();
   const tls = (d) => d.toLocaleString(`en-GB`);
   const compare = (diffs, y = 0, mo = 0, d = 0, h = 0, mi = 0, s = 0 ) => {
@@ -18,10 +18,10 @@ function runTests() {
   };
 
   const getExpected = (diffs, diffsTst, all) => {
-    console.log(diffs.totals)
-    const diffsTstObj = Object.keys(diffs).reduce( (acc, k, i) =>
-      !/string/i.test(k) && {...acc, [k]: diffsTst[i]} || acc, {} );
-    return stringify({diffs: diffsTstObj, all});
+    const diffsTestForStringifier = Object.keys(diffs)
+      .filter(k => /^(years|month|days|hours|minutes|seconds)/i.test(k))
+      .reduce( (acc, k, i) => ( {...acc, [k]: diffsTst[i] || 0} ), {} );
+    return diffs.stringify({values: diffsTestForStringifier, full: all});
   }
 
   const testFactory = function(start, end, testNr = 0, ...diffsTst) {
@@ -31,7 +31,7 @@ function runTests() {
         const diffs = diffCalc(start, end);
         const se = `<br>from: ${tls(end > start ? start : end)} to: ${tls(end > start ? end : start)}<br>`;
         const expRec = `&nbsp;&nbsp;=> Expected: ${getExpected(diffs, diffsTst, allZeros)}
-            <br>&nbsp;&nbsp;=> Received:  ${allZeros ? diffs.fullString() : diffs}`;
+            <br>&nbsp;&nbsp;=> Received:  ${allZeros ? diffs.resultFull : diffs}`;
         const compared = compare(diffs, ...diffsTst);
         return compared
           ? `<span class="ok">${testNr ? ` <b>Test #${testNr}</b>` : `` } OK</span>${se}${expRec}`
@@ -116,20 +116,6 @@ function runTests() {
   ].forEach((test) => print(test().result));
 }
 
-function mimicStringifier() {
-  const pipe = (...functions) => initial => functions.reduce((y, func) => func(y), initial);
-  const single = (n, term) => (n === 1 ? term.slice(0, -1) : term);
-  const aggregateDiffs = ({diffs, all}) => all
-    ? Object.entries(diffs).filter( ([key,]) => key !== `totals`)
-    : Object.entries(diffs).filter(([, value]) => all ? value || 0: value > 0);
-  const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
-    [...acc, `${value} ${single(value, key)}`], [] );
-  const diffs2SingleString = diffStrings  => diffStrings.length < 1
-    ? `Dates are equal` : `${diffStrings.slice(0, -1).join(`, `)}${
-      diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
-  return pipe(aggregateDiffs, stringifyDiffs, diffs2SingleString)
-}
-
 function printFactory() {
   const ul = document.body.insertAdjacentElement( `beforeend`, document.createElement(`ul`) );
   const maybeHead = t => `${t}`.startsWith(`!!`) ? ` class="head"` : ``;
@@ -153,9 +139,9 @@ function displayTime2NewYear() {
   const newYear = new Date(2023, 11, 31);
   const nwYearElem = document.querySelector(\`#showNwYear\`);
   const run = () =>  {
-      clearTimeout(to);
-      nwYearElem.innerHTML = \`&lt;b>\${diffCalc(new Date(), newYear).fullString()}&lt;/b>\`;
-      to = setTimeout(run, 1000);
+    clearTimeout(to);
+    nwYearElem.innerHTML = \`&lt;b>\${diffCalc(new Date(), newYear).resultFull}&lt;/b>\`;
+    to = setTimeout(run, 1000);
   };
   run();
 }</code></pre>`;
@@ -185,7 +171,7 @@ function displayTime2NewYear() {
     const nwYearElem = document.querySelector(`#showNwYear`);
     const run = () =>  {
       clearTimeout(to);
-      nwYearElem.innerHTML = `<b>${diffCalc(new Date(), newYear).fullString()}</b>`;
+      nwYearElem.innerHTML = `<b>${diffCalc(new Date(), newYear).resultFull}</b>`;
       to = setTimeout(run, 1000);
     };
     run();
