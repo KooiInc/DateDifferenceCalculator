@@ -6,8 +6,6 @@ function dateDiffCalculatorFactory(forTest = false) {
 
   return function (date1, date2) {
     const {d1, d2} = orderAndFragmentize({d1: date1, d2: date2});
-    d1.seconds = d1.seconds + Math.round(d1.milliseconds/1000);
-    d2.seconds = d2.seconds + Math.round(d2.milliseconds/1000);
     const fy = new Date(d1.year, d2.month, d2.date) >= new Date(d1.year, d1.month, d1.date);
     const fd = toNr(...timeValues(d2)) - toNr(...timeValues(d1)) >= 0;
     const fm = d2.date >= d1.date;
