@@ -1,8 +1,8 @@
 export default dateDiffCalculatorFactory;
 
 function dateDiffCalculatorFactory(forTest = false) {
-  const {toNr, toISO, timeValues, daysInMonth, timeDiff} = helpers();
-  const {orderAndFragmentize, stringifier} = compositions();
+  const {toNr, toISO, timeValues, timeDiff} = helpers();
+  const {orderAndFragmentize, stringifier, daysOfPreviousMonth} = compositions();
 
   return function (date1, date2) {
     const {d1, d2} = orderAndFragmentize({d1: date1, d2: date2});
@@ -15,7 +15,7 @@ function dateDiffCalculatorFactory(forTest = false) {
       to: toISO(new Date(...Object.values(d2))),
       years: d2.year - d1.year + (fy ? 0 : -1),
       months: (!fy ? (11 - d1.month) + d2.month + +(fm): d2.month - d1.month),
-      days: !fm ? (daysInMonth(new Date(d2.year, d2.month - 1, 1)) - d1.date) + (fd ? d2.date : d2.date - 1) :
+      days: !fm ? (daysOfPreviousMonth(d2) - d1.date) + (fd ? d2.date : d2.date - 1) :
         d2.date - (fd ? d1.date : d1.date + 1),
       ...timeDiffs,
     };
@@ -40,7 +40,7 @@ function helpers() {
       hours: Math.floor(MS/3_600_000) % 24,
       minutes: Math.floor(MS/60_000) % 60,
       seconds: Math.floor(MS/1000) % 60 }; };
-  
+
   return {
     timeValues,
     toISO: date => date.toISOString(),
@@ -67,8 +67,10 @@ function compositions() {
   const diffs2SingleString = diffStrings  => diffStrings.length < 1
     ? `Dates are equal` : `${diffStrings.slice(0, -1).join(`, `)}${
       diffStrings.length > 1 ? ` and ` : ``}${diffStrings.slice(-1).shift()}`;
-  
+  const firstDayOfMonth = ({month, year}) => new Date(year, month, 1);
+  const nDaysOfPreviousMonth = date => new Date(date.setDate(date.getDate() - 1)).getDate();
   return {
-    orderAndFragmentize: pipe(orderDates, toFragments), 
-    stringifier: pipe(filterRelevant, aggregateDiffs, stringifyDiffs, diffs2SingleString)};
+    orderAndFragmentize: pipe(orderDates, toFragments),
+    stringifier: pipe(filterRelevant, aggregateDiffs, stringifyDiffs, diffs2SingleString),
+    daysOfPreviousMonth: pipe(firstDayOfMonth, nDaysOfPreviousMonth)};
 }
