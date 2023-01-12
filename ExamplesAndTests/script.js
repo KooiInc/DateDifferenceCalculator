@@ -71,15 +71,15 @@ function runTests() {
     () => {
       const start = xDate(new Date(1991, 7, 27, 12, 30));
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, 8, 31, 4, 3, 11, 30); },
+      return testFactory(start.date, end.date, 8, 31, 4, 4, 11, 30); },
     () => {
       const start = xDate(new Date(1994, 9, 6, 1, 30));
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, 9, 28, 2, 24, 22, 30); },
+      return testFactory(start.date, end.date, 9, 28, 2, 25, 22, 30); },
     () => {
       const start = xDate(new Date(1997, 3, 24, 2));
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, 10, 25, 8, 6, 22); },
+      return testFactory(start.date, end.date, 10, 25, 8, 7, 22); },
     () => {
       const start = xDate(new Date(1933, 1, 5));
       const end = start.clone().set(new Date(2023, 1, 4));
