@@ -6,17 +6,19 @@ function dateDiffCalculatorFactory(forTest = false) {
 
   return function (date1, date2) {
     const {d1, d2} = orderAndFragmentize({d1: date1, d2: date2});
-    const fy = new Date(d1.year, d2.month, d2.date) >= new Date(d1.year, d1.month, d1.date);
-    const fd = toNr(...timeValues(d2)) - toNr(...timeValues(d1)) >= 0;
-    const fm = d2.date >= d1.date;
+    const fullYears = new Date(d1.year, d2.month, d2.date) >= new Date(d1.year, d1.month, d1.date);
+    const fullMonths = d2.date >= d1.date;
+    const fullDays = toNr(...timeValues(d2)) - toNr(...timeValues(d1)) >= 0;
+
     const timeDiffs = timeDiff(d1, d2);
     const diffs = {
       from: toISO(new Date(...Object.values(d1))),
       to: toISO(new Date(...Object.values(d2))),
-      years: d2.year - d1.year + (fy ? 0 : -1),
-      months: (!fy ? (11 - d1.month) + d2.month + +(fm): d2.month - d1.month),
-      days: !fm ? (daysOfPreviousMonth(d2) - d1.date) + (fd ? d2.date : d2.date - 1) :
-        d2.date - (fd ? d1.date : d1.date + 1),
+      years: d2.year - d1.year + (fullYears ? 0 : -1),
+      months: (!fullYears ? (11 - d1.month) + d2.month + +(fullMonths): d2.month - d1.month),
+      days: !fullMonths
+        ? (daysOfPreviousMonth(d2) - d1.date) + (fullDays ? d2.date : d2.date - 1)
+        : d2.date - (fullDays ? d1.date : d1.date + 1),
       ...timeDiffs,
     };
 
