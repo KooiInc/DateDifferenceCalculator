@@ -32,6 +32,8 @@ function dateDiffCalculatorFactory(forTest = false) {
 function helpers() {
   const pad0 = (number = 0) => `${number}`.padStart(2, `0`);
   const timeValues = frags => [frags.hours, frags.minutes, frags.seconds];
+  const toNr = (...frags) => +(frags.reduce( (acc, frag) => acc + pad0(frag), ``));
+  const toISO = date => date.toISOString();
   const timeDiff = (d1, d2) => {
     const from = new Date(2000, 0, d2.date - 1, ...timeValues(d1));
     const to = new Date(2000, 0, d2.date, ...timeValues(d2));
@@ -41,13 +43,7 @@ function helpers() {
       minutes: Math.floor(MS/60_000) % 60,
       seconds: Math.floor(MS/1000) % 60 }; };
 
-  return {
-    timeValues,
-    toISO: date => date.toISOString(),
-    toNr: (...frags) => +(frags.reduce( (acc, frag) => acc + pad0(frag), ``)),
-    daysInMonth: date => new Date(date.setDate(date.getDate() - 1)).getDate(),
-    timeDiff,
-  };
+  return { timeValues, timeDiff, toNr, toISO, };
 }
 
 function compositions() {
