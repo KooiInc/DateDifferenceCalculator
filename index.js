@@ -15,7 +15,7 @@ function dateDiffCalculatorFactory(forTest = false) {
       from: toISO(new Date(...Object.values(d1))),
       to: toISO(new Date(...Object.values(d2))),
       years: d2.year - d1.year + (fullYears ? 0 : -1),
-      months: (!fullYears ? (11 - d1.month) + d2.month + +(fullMonths): d2.month - d1.month),
+      months: !fullYears ? (11 - d1.month) + d2.month + +(fullMonths) : d2.month - d1.month,
       days: !fullMonths
         ? (daysOfPreviousMonth(d2) - d1.date) + (fullDays ? d2.date : d2.date - 1)
         : d2.date - (fullDays ? d1.date : d1.date + 1),
@@ -57,7 +57,7 @@ function compositions() {
     minutes: date.getMinutes(), seconds: date.getSeconds(), milliseconds: date.getMilliseconds()} );
   const toFragments = ([start, end]) => ({d1: date2Fragments(start), d2: date2Fragments(end)});
   const filterRelevant = ({values, full}) =>
-    [ Object.entries(values).filter( ([key, ]) => /^(years|month|days|hours|minutes|seconds)/i.test(key)), full ];
+    [Object.entries(values).filter( ([key, ]) => /^(years|month|days|hours|minutes|seconds)/i.test(key)), full];
   const aggregateDiffs = ([diffs, full]) =>
     full ? diffs : diffs.filter(([, value]) => full ? +value : value > 0);
   const stringifyDiffs = diffsFiltered => diffsFiltered.reduce( (acc, [key, value])  =>
