@@ -167,10 +167,10 @@ function displayTime2NewYear() {
   function composeTimer(elem, endDate) {
     const pipe = (...fns) => x0 => fns.reduce( (v, fn) => fn(v), x0);
     const clearElement = () => elem.textContent = ``;
-    const createDiff = () => `<b>${diffCalc(new Date(), endDate)}</b>`;
-    const redoEl = html => elem.insertAdjacentHTML(`beforeend`, html);
-    const returnTrue = () => true;
-    return pipe(clearElement, createDiff, redoEl, returnTrue);
+    const createDiff = () => `${diffCalc(new Date(), endDate)}`;
+    const redoEl = diffText => elem.insertAdjacentElement(`beforeend`,
+      Object.assign(document.createElement(`b`), {textContent: diffText}));
+    return pipe(clearElement, createDiff, redoEl);
   }
 
   function displayTime2NewYear() {
