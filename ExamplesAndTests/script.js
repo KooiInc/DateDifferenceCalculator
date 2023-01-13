@@ -147,11 +147,11 @@ function displayTime2NewYear() {
   print(
     `!!
     <div class="explain">
-      <h2>Tests for time between two dates calculation</h2>
+      <h2>Calculate time between two dates</h2>
       <div class="first"><code>dateDiffCalculatorFactory</code> returns a function 
       to calculate the time between two dates. 
       <div>The function returns the time passed in years, months, days, hours etc. 
-      for a date compared to a later or earlier date.</div>
+      for a date compared to a later date.</div>
       <div>For example, the time from now until next new year in a function:
         ${example}
         <div>
