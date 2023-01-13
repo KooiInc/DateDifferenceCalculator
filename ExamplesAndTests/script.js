@@ -159,8 +159,8 @@ function displayTime2NewYear() {
           <span id="showNwYear"></span>
         </div>
         </div>
-      <div>In the following: tests for a number of date pairs.</div>
-    </div>`);
+    </div>`,
+    `!!<h3><i>Tests for a number of date pairs</i>.</h3>`);
   Prism.highlightElement(document.querySelector(`pre.language-javascript code`));
   displayTime2NewYear();
 
