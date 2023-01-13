@@ -164,15 +164,18 @@ function displayTime2NewYear() {
   Prism.highlightElement(document.querySelector(`pre.language-javascript code`));
   displayTime2NewYear();
 
+  function composeTimer(elem, endDate) {
+    const pipe = (...fns) => x0 => fns.reduce( (v, fn) => fn(v), x0);
+    const clearElement = () => elem.textContent = ``;
+    const createDiff = () => `<b>${diffCalc(new Date(), endDate)}</b>`;
+    const redoEl = html => elem.insertAdjacentHTML(`beforeend`, html);
+    const returnTrue = () => true;
+    return pipe(clearElement, createDiff, redoEl, returnTrue);
+  }
+
   function displayTime2NewYear() {
-    let to = 0;
-    const newYear = new Date(2023, 11, 31);
-    const nwYearElem = document.querySelector(`#showNwYear`);
-    const run = () =>  {
-      clearTimeout(to);
-      nwYearElem.innerHTML = `<b>${diffCalc(new Date(), newYear).resultFull}</b>`;
-      to = setTimeout(run, 1000);
-    };
+    const redo = composeTimer(document.querySelector(`#showNwYear`), new Date(2023, 11, 31));
+    const run = () => (redo() && setTimeout(run, 1000));
     run();
   }
 }
