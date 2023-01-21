@@ -1,5 +1,5 @@
 {
-  "name": "DateDifferenceCalculator",
+  "name": "datediffcalculator",
   "version": "1.0.0",
   "private": false,
   "description": "Calculate difference for 2 JS Dates in years, months etc.",
