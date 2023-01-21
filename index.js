@@ -1,15 +1,14 @@
 export default dateDiffCalculatorFactory;
 
 function dateDiffCalculatorFactory(forTest = false) {
-  const {toNr, toISO, timeValues, timeDiff} = helpers();
+  const {frags2Nr, toISO, timeValues, timeDiff} = helpers();
   const {orderAndFragmentize, stringifier, daysOfPreviousMonth} = compositions();
 
   return function (date1, date2) {
     const {d1, d2} = orderAndFragmentize({d1: date1, d2: date2});
     const fullYears = new Date(d1.year, d2.month, d2.date) >= new Date(d1.year, d1.month, d1.date);
     const fullMonths = d2.date >= d1.date;
-    const fullDays = toNr(...timeValues(d2)) - toNr(...timeValues(d1)) >= 0;
-
+    const fullDays = frags2Nr(...timeValues(d2)) - frags2Nr(...timeValues(d1)) >= 0;
     const timeDiffs = timeDiff(d1, d2);
     const diffs = {
       from: toISO(new Date(...Object.values(d1))),
@@ -30,11 +29,10 @@ function dateDiffCalculatorFactory(forTest = false) {
       resultFull: stringifier({values: diffs, full: true}), };
   };
 }
-
 function helpers() {
   const pad0 = (number = 0) => `${number}`.padStart(2, `0`);
   const timeValues = frags => [frags.hours, frags.minutes, frags.seconds];
-  const toNr = (...frags) => +(frags.reduce( (acc, frag) => acc + pad0(frag), ``));
+  const frags2Nr = (...frags) => +(frags.reduce( (acc, frag) => acc + pad0(frag), ``));
   const toISO = date => date.toISOString();
   const timeDiff = (d1, d2) => {
     const from = new Date(2000, 0, d2.date - 1, ...timeValues(d1));
@@ -45,7 +43,7 @@ function helpers() {
       minutes: Math.floor(MS/60_000) % 60,
       seconds: Math.floor(MS/1000) % 60 }; };
 
-  return { timeValues, timeDiff, toNr, toISO, };
+  return { timeValues, timeDiff, frags2Nr, toISO, };
 }
 
 function compositions() {
