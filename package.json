@@ -1,0 +1,23 @@
+{
+  "name": "DateDifferenceCalculator",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Calculate difference for 2 JS Dates in years, months etc.",
+  "homepage": "https://github.com/KooiInc/DateDifferenceCalculator#readme",
+  "main": "index.js",
+  "bugs": {
+    "url": "https://github.com/KooiInc/DateDifferenceCalculator/issues"
+  },
+  "keywords": [
+    "datetime",
+    "js",
+    "utility"
+  ],
+  "author": "KooiInc",
+  "license": "CCO-1.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KooiInc/DateDifferenceCalculator.git"
+  }
+}
