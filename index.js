@@ -8,7 +8,6 @@ function dateDiffCalculatorFactory(forTest = false) {
     const {d1, d2} = orderAndFragmentize({d1: date1, d2: date2});
     const fullYears = new Date(d1.year, d2.month, d2.date) >= new Date(d1.year, d1.month, d1.date);
     const fullMonths = d2.date >= d1.date;
-    console.log(date2, fullMonths);
     const fullDays = frags2Nr(...timeValues(d2)) - frags2Nr(...timeValues(d1)) >= 0;
     const timeDiffs = timeDiff(d1, d2);
     const diffs = {
