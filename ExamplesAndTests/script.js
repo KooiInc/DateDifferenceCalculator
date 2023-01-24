@@ -1,6 +1,7 @@
 const { print } = printFactory();
 const xDFactory = (await import(`https://kooiinc.github.io/datefiddler/datefiddler.js`)).default;
-const libLocation = location.host.startsWith(`dev.kooi`) ? "/ddcLib/index.js" : "../index.js";
+const isDev = location.host.startsWith(`dev.kooi`);
+const libLocation = isDev ? "/ddcLib/index.js" : "../index.js";
 const dateDiffCalculatorFactory = (await import(libLocation)).default;
 const diffCalc = dateDiffCalculatorFactory(true);
 printHeader();
@@ -175,7 +176,7 @@ function displayTime2NewYear() {
 
   function displayTime2NewYear() {
     const redo = composeTimer(document.querySelector(`#showNwYear`), new Date(2023, 11, 31));
-    const run = () => (redo() && setTimeout(run, 1000));
+    const run = () => (redo() && !isDev && setTimeout(run, 1000));
     run();
   }
 }
