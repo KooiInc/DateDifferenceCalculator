@@ -60,15 +60,15 @@ function runTests() {
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours");
-      return testFactory(start.date, end.date, 5, 3, 7, 7, 20); },
+      return testFactory(start.date, end.date, 5, 3, 7, 6, 20); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours, -25 minutes");
-      return testFactory(start.date, end.date, 6, 3, 7, 7, 19, 35); },
+      return testFactory(start.date, end.date, 6, 3, 7, 6, 19, 35); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours, -25 minutes, 130 seconds");
-      return testFactory(start.date, end.date, 7, 3, 7, 7, 19, 37, 10); },
+      return testFactory(start.date, end.date, 7, 3, 7, 6, 19, 37, 10); },
     () => {
       const start = xDate(new Date(1991, 7, 27, 12, 30));
       const end = start.clone().set(new Date(2023, 0, 1));
