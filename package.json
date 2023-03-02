@@ -1,6 +1,6 @@
 {
   "name": "datediffcalculator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "description": "Calculate difference for 2 JS Dates in years, months etc.",
   "homepage": "https://github.com/KooiInc/DateDifferenceCalculator#readme",

@@ -34,7 +34,7 @@ function dateDiffCalculatorFactory(forTest = false) {
 function helpers() {
   const pad0 = (number = 0) => `${number}`.padStart(2, `0`);
   const timeValues = frags => [frags.hours, frags.minutes, frags.seconds];
-  const frags2Nr = (...frags) => +(frags.reduce( (acc, frag) => acc + pad0(frag), ``));
+  const frags2Nr = (...frags) => +(frags.reduce( (acc, frag) => acc + pad0(frag), ``)) || 235959999;
   const toISO = date => date.toISOString();
   const timeDiff = (d1, d2) => {
     const from = new Date(2000, 0, d2.date - 1, ...timeValues(d1));
