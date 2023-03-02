@@ -25,10 +25,12 @@ function runTests() {
   }
 
   const testFactory = function(start, end, testNr = 0, ...diffsTst) {
+    const debugIt = diffsTst.slice(-1)[0] === true;
+    diffsTst = debugIt && diffsTst.slice(0, -1) || diffsTst;
     const allZeros = diffsTst.length && diffsTst.reduce( (acc, v) => acc + v, 0) === 0;
     return {
       get result() {
-        const diffs = diffCalc(start, end);
+        const diffs = diffCalc(start, end, debugIt);
         const se = `<br>from: ${tls(end > start ? start : end)} to: ${tls(end > start ? end : start)}<br>`;
         const expRec = `&nbsp;&nbsp;=> Expected: ${getExpected(diffs, diffsTst, allZeros)}
             <br>&nbsp;&nbsp;=> Received:  ${allZeros ? diffs.resultFull : diffs}`;
@@ -60,15 +62,15 @@ function runTests() {
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours");
-      return testFactory(start.date, end.date, 5, 3, 7, 6, 20); },
+      return testFactory(start.date, end.date, 5, 3, 7, 7, 20); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours, -25 minutes");
-      return testFactory(start.date, end.date, 6, 3, 7, 6, 19, 35); },
+      return testFactory(start.date, end.date, 6, 3, 7, 7, 19, 35); },
     () => {
       const start = xDate(new Date());
       const end = start.clone().add("4 years, -4 month, -23 days, -4 hours, -25 minutes, 130 seconds");
-      return testFactory(start.date, end.date, 7, 3, 7, 6, 19, 37, 10); },
+      return testFactory(start.date, end.date, 7, 3, 7, 7, 19, 37, 10); },
     () => {
       const start = xDate(new Date(1991, 7, 27, 12, 30));
       const end = start.clone().set(new Date(2023, 0, 1));
@@ -76,7 +78,7 @@ function runTests() {
     () => {
       const start = xDate(new Date(1994, 9, 6, 1, 30));
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, 9, 28, 2, 25, 22, 30); },
+      return testFactory(start.date, end.date, 9, 28, 2, 25, 22, 30, true); },
     () => {
       const start = xDate(new Date(1997, 3, 24, 2));
       const end = start.clone().set(new Date(2023, 0, 1));
