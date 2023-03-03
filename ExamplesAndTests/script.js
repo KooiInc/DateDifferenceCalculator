@@ -78,7 +78,7 @@ function runTests() {
     () => {
       const start = xDate(new Date(1994, 9, 6, 1, 30));
       const end = start.clone().set(new Date(2023, 0, 1));
-      return testFactory(start.date, end.date, 9, 28, 2, 25, 22, 30, true); },
+      return testFactory(start.date, end.date, 9, 28, 2, 25, 22, 30); },
     () => {
       const start = xDate(new Date(1997, 3, 24, 2));
       const end = start.clone().set(new Date(2023, 0, 1));
