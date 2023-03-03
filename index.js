@@ -51,7 +51,7 @@ function helpers() {
     let years = isSameDate(start, end) ? 0 : end.year - start.year - +(subtractYear);
     let months = years !== end.year - start.year ? 12 - start.month + end.month : end.month - start.month;
     months -= +(end.date < start.date);
-    subtractYear = subtractYear && years > 0 && months < 11;
+    subtractYear = subtractYear && months < 11 || (end.month === 1 && end.date === 1);
     const subtractMonth = !isSameDate(start, end) && end.month <= start.month && end.date < start.date;
     const endMonth =  subtractMonth ? end.month === 1 ? 12 : end.month - 1 : end.month;
     const remainingValues = [ end.year - +subtractYear, endMonth - 1, ...start.all.slice(2)];
