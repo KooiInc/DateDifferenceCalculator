@@ -26,6 +26,7 @@ function helpers() {
   const toISO = date => date.toISOString();
   const timeDiff = (d1, d2) => dateDiffCalc(d1 - d2);
   const dProx = dateProxyFactory();
+  const isSameDate = (d1, d2) => d1.year === d2.year && d1.month === d2.month && d1.date === d2.date;
 
   function dateDiffCalc(milliseconds) {
     milliseconds = Math.abs(milliseconds);
@@ -42,10 +43,6 @@ function helpers() {
   }
 
   function remainingTimeCalculator(start, end, debug) {
-    const isSameDate = (d1, d2) =>
-      d1.year === d2.year &&
-      d1.month === d2.month &&
-      d1.date === d2.date;
     [start, end] = start > end ? [dProx(end), dProx(start)] : [dProx(start), dProx(end)];
     let subtractYear = end.month < start.month || end.month === start.month && end.date < start.date;
     let years = isSameDate(start, end) ? 0 : end.year - start.year - +(subtractYear);
