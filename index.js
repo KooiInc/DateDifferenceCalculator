@@ -34,12 +34,7 @@ function helpers() {
     const mindf = Math.floor((milliseconds / 60_000) % 60);
     const hourdf = Math.floor(milliseconds / 3_600_000 % 24);
     const daydf = Math.floor((milliseconds / 3_600_000) / 24);
-    return {
-      days: daydf,
-      hours: hourdf,
-      minutes: mindf,
-      seconds: secsdf
-    };
+    return { days: daydf, hours: hourdf, minutes: mindf, seconds: secsdf };
   }
 
   function remainingTimeCalculator(start, end, debug) {
