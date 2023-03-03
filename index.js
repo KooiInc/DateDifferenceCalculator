@@ -61,14 +61,8 @@ function helpers() {
       minutes: (d, v) => v && d.setMinutes(v) || d.getMinutes(),
       seconds: (d, v) => v && d.setSeconds(v) || d.getSeconds(),
       ms: (d, v) => v && d.setMilliseconds(v) || d.getMilliseconds(),
-      all: d => [
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDate(),
-        d.getHours(),
-        d.getMinutes(),
-        d.getSeconds(),
-        d.getMilliseconds()],
+      all: d => [ d.getFullYear(), d.getMonth(), d.getDate(),
+        d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds() ],
       dt: d => d,
       local: d => d.toLocaleString()
     };
