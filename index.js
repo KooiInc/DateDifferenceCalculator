@@ -83,10 +83,7 @@ function helpers() {
     return date => {
       const dProxy = {
         get: (obj, name) => props[name]?.(obj) ?? obj[name],
-        set: (obj, name, value) => {
-          props[name]?.(obj, value);
-          return obj;
-        },
+        set: ( obj, name, value) => props[name]?.(obj, value),
       };
       return new Proxy(date, dProxy);
     };
